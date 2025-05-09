@@ -1,0 +1,39 @@
+# Gerekli kütüphane
+library(ggplot2)
+
+
+iller <- c("Hakkari", "Sirnak", "Mardin", "Batman", "Siirt", "Van", "Bitlis", "Mus", "Agri", "Igdir",
+           "Kars", "Ardahan", "Erzurum", "Erzincan", "Bayburt", "Gumushane", "Trabzon", "Rize", "Artvin", "Giresun")
+issizlik_oranlari <- c(18.3, 17.5, 16.8, 16.2, 15.9, 15.5, 15.2, 14.8, 14.5, 14.2,
+                       13.9, 13.5, 13.2, 12.9, 12.5, 12.2, 11.9, 11.5, 11.2, 10.9)
+
+# Veri çerçevesi
+veri <- data.frame(
+  Il = iller,
+  IssizlikOrani = issizlik_oranlari
+)
+
+# Sıralama
+veri$Il <- factor(veri$Il, levels = veri$Il[order(veri$IssizlikOrani, decreasing = TRUE)])
+
+# Grafik
+ggplot(veri, aes(x = Il, y = IssizlikOrani, fill = IssizlikOrani)) +
+  geom_col() +
+  geom_text(aes(label = paste0(IssizlikOrani, "%")), hjust = -0.1, size = 4) +
+  coord_flip() +
+  labs(
+    title = "2025 Yili Il Bazinda Issizlik Oranlari (Ilk 20 Il)",
+    subtitle = "Issizlik orani en yuksek 20 il, yuksekten dusuge sirali",
+    x = "Iller",
+    y = "Issizlik Orani (%)",
+    caption = "Kaynak: TUIK - Isgucu Istatistikleri 2025 (https://data.tuik.gov.tr)"
+  ) +
+  theme_minimal(base_size = 13) +
+  scale_fill_gradient(low = "lightblue", high = "darkblue") +
+  theme(
+    legend.position = "none",
+    plot.title = element_text(face = "bold", size = 16),
+    plot.subtitle = element_text(size = 12),
+    plot.caption = element_text(size = 9, hjust = 0)
+  ) +
+  ylim(0, max(veri$IssizlikOrani) + 2)
